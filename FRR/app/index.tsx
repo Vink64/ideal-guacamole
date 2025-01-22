@@ -1,35 +1,44 @@
-import React from "react";
+import { Stack, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 
 // Exemplo de cursos
 const featuredCourse = {
   id: "0",
-  title: "Curso Destaque: React Native Avançado",
+  title: "Curso Destaque: Vaneira New S",
   image: "https://picsum.photos/id/58/1280/853",
 };
 
 const categories = [
   {
     id: "1",
-    title: "Desenvolvimento Web",
+    title: "Dança de Salão",
     courses: [
-      { id: "1.1", name: "HTML & CSS", image: "https://picsum.photos/id/74/4288/2848" },
-      { id: "1.2", name: "JavaScript Moderno", image: "https://picsum.photos/id/76/4912/3264" },
-      { id: "1.3", name: "React JS", image: "https://picsum.photos/id/96/4752/3168" },
+      { id: "1.1", name: "Sertaneijo", image: "https://picsum.photos/id/74/4288/2848" },
+      { id: "1.2", name: "Vaneira", image: "https://picsum.photos/id/76/4912/3264" },
+      { id: "1.3", name: "Forró", image: "https://picsum.photos/id/96/4752/3168" },
     ],
   },
   {
     id: "2",
-    title: "Programação Mobile",
+    title: "Dança Individual",
     courses: [
-      { id: "2.1", name: "React Native", image: "https://picsum.photos/id/104/3840/2160" },
-      { id: "2.2", name: "Flutter", image: "https://picsum.photos/id/82/1500/997" },
-      { id: "2.3", name: "Swift", image: "https://picsum.photos/id/102/4320/3240" },
+      { id: "2.1", name: "Passinho (Flashback)", image: "https://picsum.photos/id/104/3840/2160" },
+      { id: "2.2", name: "Street Dance", image: "https://picsum.photos/id/82/1500/997" },
+      { id: "2.3", name: "Break", image: "https://picsum.photos/id/102/4320/3240" },
     ],
   },
 ];
 
 export default function HomeScreen() {
+
+  const navigation = useNavigation(); // Pegando a navegação
+
+  // Escondendo o cabeçalho ao carregar a tela
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   const renderCategory = ({ item }: any) => (
     <View style={styles.categoryContainer}>
       <Text style={styles.categoryTitle}>{item.title}</Text>
@@ -49,6 +58,19 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: 'Home',
+          headerStyle: { backgroundColor: '#000' },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+          fontWeight: 'bold',
+          },
+
+          
+        }}
+      />
+
       {/* Banner Principal */}
       <TouchableOpacity style={styles.banner} onPress={() => alert(`Abrir ${featuredCourse.title}`)}>
         <Image source={{ uri: featuredCourse.image }} style={styles.bannerImage} />
