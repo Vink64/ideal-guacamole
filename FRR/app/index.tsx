@@ -1,88 +1,52 @@
-import { Stack, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-
-// Exemplo de cursos
-const featuredCourse = {
-  id: "0",
-  title: "Curso Destaque: Vaneira New S",
-  image: "https://picsum.photos/id/58/1280/853",
-};
-
-const categories = [
-  {
-    id: "1",
-    title: "Dança de Salão",
-    courses: [
-      { id: "1.1", name: "Sertaneijo", image: "https://picsum.photos/id/74/4288/2848" },
-      { id: "1.2", name: "Vaneira", image: "https://picsum.photos/id/76/4912/3264" },
-      { id: "1.3", name: "Forró", image: "https://picsum.photos/id/96/4752/3168" },
-    ],
-  },
-  {
-    id: "2",
-    title: "Dança Individual",
-    courses: [
-      { id: "2.1", name: "Passinho (Flashback)", image: "https://picsum.photos/id/104/3840/2160" },
-      { id: "2.2", name: "Street Dance", image: "https://picsum.photos/id/82/1500/997" },
-      { id: "2.3", name: "Break", image: "https://picsum.photos/id/102/4320/3240" },
-    ],
-  },
-];
+import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
+  const router = useRouter();
 
-  const navigation = useNavigation(); // Pegando a navegação
-
-  // Escondendo o cabeçalho ao carregar a tela
-  useEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-
-  const renderCategory = ({ item }: any) => (
-    <View style={styles.categoryContainer}>
-      <Text style={styles.categoryTitle}>{item.title}</Text>
-      <FlatList
-        data={item.courses}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(course) => course.id}
-        renderItem={({ item: course }) => (
-          <TouchableOpacity style={styles.courseCard} onPress={() => alert(`Abrir ${course.name}`)}>
-            <Image source={{ uri: course.image }} style={styles.courseImage} />
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
+  const categories = [
+    {
+      id: "1",
+      title: "Desenvolvimento",
+      courses: [
+        { id: "101", title: "React Native do Zero", image: "https://via.placeholder.com/400x200" },
+        { id: "102", title: "Next.js Avançado", image: "https://via.placeholder.com/400x200" },
+      ],
+    },
+    {
+      id: "2",
+      title: "Design & UX",
+      courses: [
+        { id: "201", title: "Figma para Iniciantes", image: "https://via.placeholder.com/400x200" },
+        { id: "202", title: "UI Design com Adobe XD", image: "https://via.placeholder.com/400x200" },
+      ],
+    },
+  ];
 
   return (
     <ScrollView style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: 'Home',
-          headerStyle: { backgroundColor: '#000' },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-          fontWeight: 'bold',
-          },
+      <Text style={styles.title}>Bem-vindo às Vídeo Aulas</Text>
 
-          
-        }}
-      />
-
-      {/* Banner Principal */}
-      <TouchableOpacity style={styles.banner} onPress={() => alert(`Abrir ${featuredCourse.title}`)}>
-        <Image source={{ uri: featuredCourse.image }} style={styles.bannerImage} />
-        <Text style={styles.bannerText}>{featuredCourse.title}</Text>
-      </TouchableOpacity>
-
-      {/* Lista de Categorias */}
-      <FlatList
-        data={categories}
-        keyExtractor={(item) => item.id}
-        renderItem={renderCategory}
-      />
+      {categories.map((category) => (
+        <View key={category.id} style={styles.categoryContainer}>
+          <Text style={styles.categoryTitle}>{category.title}</Text>
+          <FlatList
+            data={category.courses}
+            horizontal
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.courseItem}
+                onPress={() => router.push(`./course/${item.id}` as const)}
+              >
+                <Image source={{ uri: item.image }} style={styles.courseImage} />
+                <Text style={styles.courseTitle}>{item.title}</Text>
+              </TouchableOpacity>
+            )}
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+      ))}
     </ScrollView>
   );
 }
@@ -90,47 +54,42 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", // Fundo escuro igual Netflix
+    backgroundColor: "#000",
+    padding: 15,
   },
-  banner: {
-    width: "100%",
-    height: 200,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    position: "relative",
-  },
-  bannerImage: {
-    width: "100%",
-    height: "100%",
-    opacity: 0.8,
-  },
-  bannerText: {
-    position: "absolute",
-    bottom: 20,
+  title: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 10,
-    borderRadius: 5,
+    marginBottom: 20,
   },
   categoryContainer: {
-    marginVertical: 10,
-    paddingLeft: 10,
+    marginBottom: 20,
   },
   categoryTitle: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 10,
   },
-  courseCard: {
-    marginRight: 10,
+  courseItem: {
+    backgroundColor: "#1e1e1e",
+    borderRadius: 10,
+    padding: 10,
+    marginRight: 15,
+    alignItems: "center",
   },
   courseImage: {
-    width: 120,
-    height: 170,
-    borderRadius: 5,
+    width: 150,
+    height: 100,
+    borderRadius: 10,
+  },
+  courseTitle: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 5,
+    textAlign: "center",
   },
 });
