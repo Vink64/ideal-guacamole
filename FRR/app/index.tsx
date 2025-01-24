@@ -1,30 +1,41 @@
-import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
+import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, ScrollView, TextInput } from "react-native";
+import {  useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const router = useRouter();
+
+  const featuredCourse = {
+    id: "0",
+    title: "Curso Destaque: React Native Avançado",
+    image: "https://picsum.photos/id/96/4752/3168",
+  };
 
   const categories = [
     {
       id: "1",
       title: "Desenvolvimento",
       courses: [
-        { id: "101", title: "React Native do Zero", image: "https://via.placeholder.com/400x200" },
-        { id: "102", title: "Next.js Avançado", image: "https://via.placeholder.com/400x200" },
+        { id: "101", title: "React Native do Zero", image: "https://picsum.photos/id/96/4752/3168" },
+        { id: "102", title: "Next.js Avançado", image: "https://picsum.photos/id/96/4752/3168" },
       ],
     },
     {
       id: "2",
       title: "Design & UX",
       courses: [
-        { id: "201", title: "Figma para Iniciantes", image: "https://via.placeholder.com/400x200" },
-        { id: "202", title: "UI Design com Adobe XD", image: "https://via.placeholder.com/400x200" },
+        { id: "201", title: "Figma para Iniciantes", image: "https://picsum.photos/id/96/4752/3168" },
+        { id: "202", title: "UI Design com Adobe XD", image: "https://picsum.photos/id/96/4752/3168" },
       ],
     },
   ];
 
   return (
     <ScrollView style={styles.container}>
+      <TouchableOpacity style={styles.banner} onPress={() => alert(`Abrir ${featuredCourse.title}`)}>
+        <Image source={{ uri: featuredCourse.image }} style={styles.bannerImage} />
+        <Text style={styles.bannerText}>{featuredCourse.title}</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Bem-vindo às Vídeo Aulas</Text>
 
       {categories.map((category) => (
@@ -81,8 +92,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   courseImage: {
-    width: 150,
-    height: 100,
+    width: 320,
+    height: 180,
     borderRadius: 10,
   },
   courseTitle: {
@@ -91,5 +102,28 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 5,
     textAlign: "center",
+  },
+  banner: {
+    width: "100%",
+    height: 200,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    position: "relative",
+  },
+  bannerImage: {
+    width: "100%",
+    height: "100%",
+    opacity: 0.8,
+  },
+  bannerText: {
+    position: "absolute",
+    bottom: 20,
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    padding: 10,
+    borderRadius: 5,
   },
 });
