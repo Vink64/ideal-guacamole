@@ -1,7 +1,27 @@
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, ScrollView, TextInput } from "react-native";
-import {  useRouter } from "expo-router";
+import {  useNavigation, useRouter } from "expo-router";
+import { useEffect } from "react";
 
 export default function HomeScreen() {
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => (
+        <View style={{flexDirection: "row", width: "100%", justifyContent: "space-between", backgroundColor: "#000000"}}>
+        <TouchableOpacity>
+          <Image source={{ uri: "https://picsum.photos/id/96/4752/3168" }} style={styles.profileImage} />
+        </TouchableOpacity>
+        <View style={styles.searchWrapper}>
+          <TextInput placeholder="Buscar cursos..." style={styles.searchInput} />
+        </View>
+        <Image source={{ uri: "https://picsum.photos/id/96/4752/3168" }} style={styles.logo} />
+        </View>
+      ),
+    });
+  }, [navigation]);
+
   const router = useRouter();
 
   const featuredCourse = {
@@ -30,12 +50,12 @@ export default function HomeScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <TouchableOpacity style={styles.banner} onPress={() => alert(`Abrir ${featuredCourse.title}`)}>
         <Image source={{ uri: featuredCourse.image }} style={styles.bannerImage} />
         <Text style={styles.bannerText}>{featuredCourse.title}</Text>
       </TouchableOpacity>
-
+      <View style={{padding: 15}}>
       <Text style={styles.title}>Bem-vindo às Vídeo Aulas</Text>
 
       {categories.map((category) => (
@@ -58,6 +78,7 @@ export default function HomeScreen() {
           />
         </View>
       ))}
+      </View>
     </ScrollView>
   );
 }
@@ -66,7 +87,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-    padding: 15,
   },
   title: {
     color: "#fff",
@@ -105,10 +125,11 @@ const styles = StyleSheet.create({
   },
   banner: {
     width: "100%",
-    height: 200,
+    height: 250,
     justifyContent: "flex-end",
     alignItems: "center",
     position: "relative",
+    marginBottom: "1%",
   },
   bannerImage: {
     width: "100%",
@@ -125,5 +146,32 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     padding: 10,
     borderRadius: 5,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginLeft: 10, // 🔥 Garante espaçamento no canto esquerdo
+    marginVertical: 10
+  },
+  searchWrapper: {
+    width: "30%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  searchInput: {
+    width: "80%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    textAlign: "center",
+    marginVertical: 10
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    marginRight: 10, // 🔥 Garante espaçamento no canto direito
+    marginVertical: 10
   },
 });
