@@ -57,7 +57,6 @@ export default function HomeScreen() {
       </TouchableOpacity>
       <View style={{padding: 15}}>
       <Text style={styles.title}>Bem-vindo às Vídeo Aulas</Text>
-
       {categories.map((category) => (
         <View key={category.id} style={styles.categoryContainer}>
           <Text style={styles.categoryTitle}>{category.title}</Text>
@@ -155,7 +154,8 @@ const styles = StyleSheet.create({
     marginVertical: 10
   },
   searchWrapper: {
-    width: "30%",
+    width: "60%",
+    maxWidth: 600,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 15,
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 10
   },
   logo: {

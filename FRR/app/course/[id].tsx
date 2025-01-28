@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
 
@@ -10,7 +10,7 @@ export default function CourseDetail() {
       navigation.setOptions({
         header: () => (
           <View style={{width: "100%", backgroundColor: "#000000", alignItems: "center", paddingVertical: 10}}>
-            <Text style={{ color: "#990000", fontSize: 24, fontWeight: 700,}}>{course.title}</Text>
+            <Text style={{ color: "#CC2200", fontSize: 24, fontWeight: 700,}}>{course.title}</Text>
           </View>
         ),
       });
@@ -46,37 +46,39 @@ export default function CourseDetail() {
         duration: "12:45",
         desc: "Veja como implementar a navegação entre telas no React Native utilizando a biblioteca React Navigation. Exploramos diferentes tipos de navegação, como Stack Navigation, Tab Navigation e Drawer Navigation",
       },
+      {
+        id: "4",
+        title: "Navegação com React Navigation",
+        thumbnail: "https://picsum.photos/id/96/4752/3168",
+        duration: "12:45",
+        desc: "Veja como implementar a navegação entre telas no React Native utilizando a biblioteca React Navigation. Exploramos diferentes tipos de navegação, como Stack Navigation, Tab Navigation e Drawer Navigation",
+      },
     ],
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#000000"}}>
+    <View style={{ flex: 1, backgroundColor: "#000000", flexWrap: "wrap"}}>
       {/* 🔹 Imagem de capa do curso */}
       <Image source={{ uri: course.coverImage }} style={{ width: "100%", height: 200 }} />
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 10 }}>{course.title}</Text>
-      <Text style={{ fontSize: 16, color: "white", marginVertical: 10 }}>{course.description}</Text>
-
-      <View style={{padding: 20}}>
+      <Text style={{ fontSize: 16, color: "white", margin:20, fontWeight: "bold" }}>{course.description}</Text>
       {/* 🔹 Lista de aulas */}
       <FlatList
         data={course.lessons}
+        horizontal
+        style={{marginLeft: 20, marginBottom: 20, marginRight: 20, flexWrap:"wrap"}}
         keyExtractor={(lesson) => lesson.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={{ flexDirection: "column", alignItems: "flex-start", marginBottom: 10 }}>
-            <View style={{flexDirection: "row"}}>
-              <View>
-                <Image source={{ uri: item.thumbnail }} style={{ width: 320, height: 180, borderRadius: 5, marginRight: 10 }} />
-                <Text style={{ fontSize: 14, color: "white", alignSelf: "center", position: "absolute", right: 14, bottom: 1}}>{item.duration}</Text>
+          <TouchableOpacity style={{maxHeight: "40%", marginRight: 20, flexDirection: "column", alignItems: "center"}}>
+            <View style={{width: "100%", alignItems: "center",}}>
+              <View style={{width: "100%"}}>
+                <Image source={{ uri: item.thumbnail }} style={{width: 320, height: 180, borderRadius: 5,}} />
+                <Text style={{ fontSize: 14, color: "#FFFFFF", position: "absolute"}}>{item.duration}</Text>
               </View>
-              <View style={{alignItems: "flex-start", marginLeft: 10}}>
-                <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.title}</Text>
-                <Text style={{fontSize: 14, maxWidth: 400, marginTop: 5}}>{item.desc}</Text>
-              </View>
+              <Text style={{ fontSize: 16, color: "#FFFFFF",}}>{item.title}</Text>
             </View>
           </TouchableOpacity>
         )}
       />
       </View>
-    </View>
   );
 }
