@@ -1,84 +1,137 @@
-import { View, Text, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, StyleSheet, ScrollView } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
 
+const { width, height } = Dimensions.get("window");
+
 export default function CourseDetail() {
-
   const navigation = useNavigation();
-  
-    useEffect(() => {
-      navigation.setOptions({
-        header: () => (
-          <View style={{width: "100%", backgroundColor: "#000000", alignItems: "center", paddingVertical: 10}}>
-            <Text style={{ color: "#CC2200", fontSize: 24, fontWeight: 700,}}>{course.title}</Text>
-          </View>
-        ),
-      });
-    }, [navigation]);
+  let imageWidth = width > 600 ? width*0.4 : width*0.9; // Define a largura das imagens como 90% da tela
 
-  const { id } = useLocalSearchParams(); // Obtém o ID do curso pela URL
+  const { id } = useLocalSearchParams();
 
-  // 🔹 Simulando dados do curso
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => (
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>{course.title}</Text>
+        </View>
+      ),
+    });
+  }, [navigation]);
+
   const course = {
     id,
     title: "Curso de React Native",
     description: "Aprenda a criar apps mobile com React Native e Expo.",
     coverImage: "https://picsum.photos/id/96/4752/3168",
     lessons: [
-      {
-        id: "1",
-        title: "Introdução ao React Native",
-        thumbnail: "https://picsum.photos/id/96/4752/3168",
-        duration: "10:30",
-        desc: "Descubra o que é o React Native, como ele funciona e quais são suas principais vantagens no desenvolvimento de aplicativos móveis. Vamos explorar a estrutura básica de um projeto e preparar seu ambiente de desenvolvimento.",
-      },
-      {
-        id: "2",
-        title: "Componentes e Props",
-        thumbnail: "https://picsum.photos/id/96/4752/3168",
-        duration: "1:15:20",
-        desc: "Aprenda sobre os blocos fundamentais do React Native: os componentes. Entenda como utilizar props para tornar seus componentes reutilizáveis e flexíveis, permitindo a criação de interfaces dinâmicas.",
-      },
-      {
-        id: "3",
-        title: "Navegação com React Navigation",
-        thumbnail: "https://picsum.photos/id/96/4752/3168",
-        duration: "12:45",
-        desc: "Veja como implementar a navegação entre telas no React Native utilizando a biblioteca React Navigation. Exploramos diferentes tipos de navegação, como Stack Navigation, Tab Navigation e Drawer Navigation",
-      },
-      {
-        id: "4",
-        title: "Navegação com React Navigation",
-        thumbnail: "https://picsum.photos/id/96/4752/3168",
-        duration: "12:45",
-        desc: "Veja como implementar a navegação entre telas no React Native utilizando a biblioteca React Navigation. Exploramos diferentes tipos de navegação, como Stack Navigation, Tab Navigation e Drawer Navigation",
-      },
+      { id: "1", title: "Introdução ao React Native", thumbnail: "https://picsum.photos/id/96/4752/3168", duration: "10:30" },
+      { id: "2", title: "Componentes e Props", thumbnail: "https://picsum.photos/id/96/4752/3168", duration: "1:15:20" },
+      { id: "3", title: "Navegação com React Navigation", thumbnail: "https://picsum.photos/id/96/4752/3168", duration: "12:45" },
+      { id: "4", title: "Navegação com React Navigation", thumbnail: "https://picsum.photos/id/96/4752/3168", duration: "12:45" },
     ],
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#000000", flexWrap: "wrap"}}>
-      {/* 🔹 Imagem de capa do curso */}
-      <Image source={{ uri: course.coverImage }} style={{ width: "100%", height: 200 }} />
-      <Text style={{ fontSize: 16, color: "white", margin:20, fontWeight: "bold" }}>{course.description}</Text>
-      {/* 🔹 Lista de aulas */}
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <View style={styles.banner}>
+      <Image source={{ uri: course.coverImage }} style={[styles.coverImage, { width: "100%" }]} />
+      <Text style={styles.description}>{course.description}</Text>
+      </View>
+
       <FlatList
         data={course.lessons}
-        horizontal
-        style={{marginLeft: 20, marginBottom: 20, marginRight: 20, flexWrap:"wrap"}}
         keyExtractor={(lesson) => lesson.id}
+        numColumns={width > 600 ? 2 : 1} // Adapta o layout conforme a tela
+        contentContainerStyle={[styles.lessonList, {maxWidth: "100%"}]}
         renderItem={({ item }) => (
-          <TouchableOpacity style={{maxHeight: "40%", marginRight: 20, flexDirection: "column", alignItems: "center"}}>
-            <View style={{width: "100%", alignItems: "center",}}>
-              <View style={{width: "100%"}}>
-                <Image source={{ uri: item.thumbnail }} style={{width: 320, height: 180, borderRadius: 5,}} />
-                <Text style={{ fontSize: 14, color: "#FFFFFF", position: "absolute"}}>{item.duration}</Text>
-              </View>
-              <Text style={{ fontSize: 16, color: "#FFFFFF",}}>{item.title}</Text>
+          <TouchableOpacity style={[styles.lessonItem, { width: imageWidth }]}>
+            {/* 🔥 AQUI: Define a proporção da imagem sem alterar o espaço do container */}
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
+              <Text style={styles.lessonDuration}>{item.duration}</Text>
             </View>
+            <Text style={styles.lessonTitle}>{item.title}</Text>
           </TouchableOpacity>
         )}
       />
-      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
+  header: {
+    width: "100%",
+    backgroundColor: "#000",
+    alignItems: "center",
+    paddingVertical: 10,
+    verticalAlign: "middle",
+  },
+  headerTitle: {
+    color: "#CC2200",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  coverImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  description: {
+    fontSize: 16,
+    color: "white",
+    margin: 20,
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
+  lessonList: {
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  lessonItem: {
+    backgroundColor: "#1e1e1e",
+    borderRadius: 10,
+    alignItems: "center",
+    margin: 10,
+  },
+  imageContainer: {
+    width: "100%",
+    aspectRatio: 16 / 9, // 🔥 Mantém a proporção 16:9 sem distorcer
+    borderRadius: 5,
+    overflow: "hidden", // 🔹 Garante que a borda arredondada funcione corretamente
+  },
+  thumbnail: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  lessonDuration: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    padding: 5,
+    borderRadius: 5,
+  },
+  lessonTitle: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    marginTop: 10,
+    textAlign: "center",
+  },
+  banner: {
+    width: "81%",
+    height: height * 0.7, // 35% da altura da tela
+    aspectRatio: 16 / 9,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+});
